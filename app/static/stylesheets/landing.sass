@@ -1,0 +1,525 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&family=Krona+One&display=swap')
+
+:root
+  --cubic-1: cubic-bezier(.31, .69, 0, .87)
+
+*
+  padding: 0
+  margin: 0
+
+.content
+  width: 100vw
+  height: calc(200vh + 80px)
+  transition: opacity 1.43s var(--cubic-1)
+
+img
+  -webkit-user-drag: none
+  user-drag: none
+  user-select: none
+  -moz-user-select: none
+  -webkit-user-select: none
+  -ms-user-select: none
+
+html
+  width: 100vw
+  height: 100vh
+  overflow: hidden
+
+body
+  position: absolute
+  width: 100vw
+  height: calc(200vh + 80px)
+  overflow: hidden
+  background-color: #01000F
+
+.background-sphere
+  position: absolute
+  width: 70vw
+  height: 70vw
+  top: calc(-0.5 * 70vw)
+  left: calc(-0.5 * 70vw)
+  z-index: 2
+
+.sphere-two
+  top: calc(100vh - 0.5 * 70vw - 80px)
+  left: calc(100vw - 0.5 * 70vw)
+  
+.preloader 
+  background-color: black
+  width: 100vw
+  height: 100vh
+  z-index: 1000
+  position: fixed
+  top: 0
+  opacity: 1
+  transition: opacity .78s var(--cubic-1) .5s, top .78s var(--cubic-1)
+  div
+    position: absolute
+    top: calc(50vh - 10px)
+    left: calc(50vw - 10px)
+    width: 20px
+    height: 20px
+    border-radius: 100%
+    background-color: white    
+    z-index: 101
+    animation: bounce 1.4s ease-in-out infinite .2s
+    opacity: 0
+    &:nth-child(1)
+      left: calc(50vw - 10px - 40px)
+      animation: bounce 1.4s ease-in-out infinite
+    &:nth-child(3)
+      left: calc(50vw - 10px + 40px)
+      animation: bounce 1.4s ease-in-out infinite .4s
+
+@keyframes bounce
+  0%, 20%, 50%, 80%, 100%
+    transform: translateY(0) scale(0.2)
+    opacity: 0
+  40%
+    transform: translateY(-30px) scale(1)
+    opacity: 1
+  60%
+    transform: translateY(-15px) scale(1)
+    opacity: 1
+
+.background-signal
+  position: absolute
+  width: 70vw
+  height: 70vw
+  z-index: 2
+  top: calc(-0.5 * 70vw)
+  left: calc(100vw - 0.5 * 70vw)
+  opacity: 0
+  transition: opacity 1.43s var(--cubic-1)
+
+.credits
+  width: 100vw
+  pointer-events: none
+  height: 80px
+  position: absolute
+  top: calc(100vh - 80px)
+  left: 0
+  background-color: black
+  z-index: 10
+  p
+    font-family: "Krona one", "Poppins", sans-serif
+    font-size: .5em
+    color: white
+    position: absolute
+    bottom: -10em
+    left: 1.5em
+    opacity: 0
+
+@keyframes entryCredits
+  0%
+    opacity: 0
+    bottom: -10em
+  100%
+    opacity: 1
+    bottom: 1em
+
+
+.navbar-container
+  width: 60px
+  height: 36px
+  position: fixed
+  top: calc(4vh + 8px)
+  left: calc(100vw - (2vw + 12px) - 60px)
+  z-index: 1000
+  &:hover
+    cursor: pointer
+
+.navbar
+  width: 100%
+  height: 100%
+  position: absolute
+  top: 0
+  left: 0
+  transform: rotate(0deg)
+  div
+    background-color: white
+    width: 36px
+    height: 1px
+    position: absolute
+    transition: background-color var(--cubic-1) 1.2s
+    &:nth-child(3)
+      top: unset
+      right: unset
+      bottom: 0
+      left: 0
+      transition: bottom var(--cubic-1) 1.2s, left var(--cubic-1) 1.2s, background-color var(--cubic-1) 1.2s
+    &:nth-child(2)
+      top: unset
+      left: unset
+      bottom: calc(50% - 0.5 * 4px)
+      right: calc(50% - 0.5 * 36px)
+    &:nth-child(1)
+      top: unset
+      left: unset
+      top: 0
+      transition: top var(--cubic-1) 1.2s, right var(--cubic-1) 1.2s , background-color var(--cubic-1) 1.2s
+      right: 0
+
+.navbar-hover
+  transform: rotate(90deg)
+  div:nth-child(3)
+    bottom: 10px
+    left: 12px
+  div:nth-child(1)
+    top: 10px
+    right: 12px
+
+.navbar-active
+  transform: rotate(90deg)
+  div:nth-child(3)
+    bottom: 22px
+    left: 12px
+  div:nth-child(1)
+    top: 25px
+    right: 12px
+.logo 
+  width: 45px
+  height: 45px
+  position: fixed
+  pointer-events: all
+  top: calc(4vh + 8px)
+  left: calc(2vw + 12px)
+  z-index: 13
+  &:hover
+    cursor: pointer
+  img
+    position: absolute
+    left: 0
+    top: 0
+    width: 45px
+    height: 45px
+  img:nth-child(2)
+    width: 25px
+    height: 25px
+    top: calc(0.5 * 45px - 0.5 * 30px)
+    left: calc(0.5 * 45px - 0.5 * 25px)
+
+.text-balloon
+  display: none
+  pointer-events: none
+  position: absolute
+  top: calc(-4vw - 25px)
+  left: 37vw
+  width: 125px !important
+  height: 125px !important
+  margin: 0 !important
+  padding: 0 !important
+  animation: moveLeftToRight 16s ease-in-out forwards infinite
+.text-balloon-2
+  display: none
+  pointer-events: none
+  width: 250px !important
+  height: 250px !important
+  left: calc(95vw - 250px)
+  top: calc(6vw - 20px)
+  animation: moveLeftToRight2 16s ease-in-out forwards infinite
+  
+@keyframes moveLeftToRight 
+  0%, 50%, 100%
+    transform: rotate(0deg)
+  25%
+    transform: rotate(-15deg)
+  75%
+    transform: rotate(15deg)
+  
+@keyframes moveLeftToRight2
+  0%, 50%, 100%
+    transform: rotate(0deg)
+  25%
+    transform: rotate(15deg)
+  75%
+    transform: rotate(-15deg)
+.mid-left
+  pointer-events: none
+  width: 75vw
+  height: 60vh
+  position: absolute
+  top: calc(4vh + 8px + 20vh)
+  left: calc(2vw + 12px)
+  z-index: 2
+  p
+    font-family: 'Poppins', sans-serif
+    font-size: 8em
+    line-height: 100%
+    opacity: 0
+  p:nth-child(2)
+    font-size: 2.6em
+    margin-left: 3vw
+    font-weight: 200
+    color: white
+    line-height: 50%
+  p:nth-child(3)
+    font-size: 1.1em
+    max-width: 42vw
+    margin-left: 3vw
+    margin-top: 2vw
+    color: white
+    line-height: 130%
+  p:nth-child(1)
+    background-image: linear-gradient(-40deg, #00FF94, #0AC9EC)
+    -webkit-background-clip: text
+    background-clip: text
+    color: transparent
+  p:nth-child(4)
+    margin-left: calc(3vw + .8em)
+    margin-top: calc(2.5vw + 1.5vh)
+    font-size: .8em
+    pointer-events: none
+    color: white
+  img
+    width: 8em
+    margin-left: 3vw
+    margin-top: -1.55em
+    position: absolute
+    opacity: 0
+    transition: opacity var(--cubic-1) .7s
+  @media (max-width: 768px)  // Tablet devices
+    width: 80vw
+    height: 80vh
+    p
+      font-size: 5em
+    p:nth-child(2)
+      font-size: 1.6em
+    p:nth-child(3)
+      font-size: .8em
+      max-width: unset
+    p:nth-child(4)
+      font-size: .6em
+    img
+      width: 6.2em
+      margin-top: -1.21em
+  @media (max-width: 480px)  // Mobile devices
+    width: 90vw
+    height: 90vh
+    p
+      font-size: 3em
+    p:nth-child(2)
+      font-size: 1.2em
+      line-height: 100%
+    p:nth-child(3)
+      font-size: .7em
+      max-width: unset
+    p:nth-child(4)
+      font-size: .8em
+    img
+      width: 8em
+      margin-top: -1.55em
+    
+.get-started:hover
+  cursor: pointer
+
+.get-started
+  pointer-events: all
+  
+.get-started-two 
+  opacity: 0
+  pointer-events: none
+  transition: opacity var(--cubic-1) .7s
+
+
+.get-started-p
+  transition: opacity var(--cubic-1) .7s
+
+.spline-phone
+  pointer-events: all
+  position: absolute
+  top: 0
+  left: 25vw
+  width: 140vw
+  height: 140vh
+  z-index: 0
+  opacity: 0
+
+.fade-in 
+  opacity: 0
+  transition: opacity .78s var(--cubic-1) .76s, transform 0.8s var(--cubic-1) 
+  
+.spline-bg
+  width: 100vw
+  height: calc(100vh + 160px)
+  position: absolute
+  top: 0
+  left: 0
+  opacity: 0
+  transition: opacity .58s var(--cubic-1) .3s
+  overflow: hidden
+
+.spline-bg-item
+  width: 150vw
+  height: calc(100vh + 160px)
+  position: absolute
+  top: 0
+  left: -25vw
+  
+.nav-items
+  width: 30vw
+  height: 100vh
+  z-index: 12
+  position: fixed
+  left: -100vw
+  top: 0
+  background-color: black
+  p
+    font-family: "Poppins", sans-serif
+    font-weight: 600
+    font-size: 3.5em
+    color: white
+    position: absolute
+    left: 15%
+    top: 20vh
+    &:nth-child(1)
+      left: 4vw
+    &:nth-child(2)
+      font-size: 1em
+      font-weight: 400
+      top: calc(2.5vw + 30vh + 20px)
+    &:nth-child(4)
+      font-size: 1em
+      font-weight: 400
+      top: calc(3.2vw + 37vh + 45px)
+    &:nth-child(6)
+      font-size: .6em
+      font-weight: 400
+      top: calc(3.2vw + 40vh + 45px + 50px)
+      opacity: 0.5
+    &:nth-child(6):hover, &:nth-child(10):hover
+      cursor: pointer
+    &:nth-child(8)
+      font-size: 1em
+      font-weight: 400
+      top: calc(3.9vw + 42vh + 140px)
+      left: calc(4vw + (0.7 * 15vw) - 0.5 * 56px)
+      pointer-events: none
+    &:nth-child(9)
+      font-size: .6em
+      font-weight: 400
+      top: calc(3.9vw + 42vh + 140px + 40px)
+      left: 15%
+      color: red
+      opacity: 0
+    &:nth-child(10)
+      font-size: .8em
+      font-weight: 600
+      top: 95vh
+      bottom: 20px
+  div
+    width: 70%
+    height: 40px
+    border-radius: 15px
+    border: 1px solid #D9D9D9
+    position: absolute
+    left: 15%
+    top: calc(2.5vw + 32vh + 40px)
+    &:nth-child(5)
+      top: calc(3.2vw + 38vh + 65px)
+    &:nth-child(7)
+      top: calc(3.9vw + 42vh + 130px)
+      background: linear-gradient(-30deg, #01F3C8, #01E1E6)
+    &:nth-child(7):hover
+      cursor: pointer
+
+.nav-register, .nav-sign
+  opacity: 0
+  transition: left .48s var(--cubic-1)
+  pointer-events: none
+.nav-item-active
+  opacity: 1
+  pointer-events: all
+
+ 
+.nav-items2
+  width: 30vw
+  height: 100vh
+  z-index: 12
+  position: fixed
+  left: -100vw
+  top: 0
+  background-color: black
+  p
+    font-family: "Poppins", sans-serif
+    font-weight: 600
+    font-size: 3.5em
+    color: white
+    position: absolute
+    left: 15%
+    top: 20vh
+    &:nth-child(1)
+      left: 4vw
+    &:nth-child(2)
+      font-size: 1em
+      font-weight: 400
+      top: calc(2.5vw + 20vh + 75px)
+    &:nth-child(4)
+      font-size: 1em
+      font-weight: 400
+      top: calc(3.2vw + 20vh + 145px)
+    &:nth-child(6)
+      font-size: 1em
+      font-weight: 400
+      top: calc(3.9vw + 20vh + 215px)
+    &:nth-child(8)
+      font-size: 1em
+      font-weight: 400
+      top: calc(4.6vw + 20vh + 285px)
+    &:nth-child(11)
+      font-size: 1em
+      font-weight: 400
+      top: calc(5.3vw + 20vh + 425px)
+      left: calc(4vw + (0.7 * 15vw) - 0.5 * 56px)
+      pointer-events: none
+    &:nth-child(12)
+      font-size: .6em
+      font-weight: 400
+      top: calc(5.3vw + 20vh + 425px + 40px)
+      left: 15%
+      color: red
+      opacity: 0
+    &:nth-child(13)
+      font-size: .8em
+      font-weight: 600
+      top: 95vh
+      bottom: 20px
+    &:nth-child(13):hover
+      cursor: pointer
+  div
+    width: 70%
+    height: 40px
+    border-radius: 15px
+    border: 1px solid #D9D9D9
+    position: absolute
+    left: 15%
+    top: calc(2.5vw + 20vh + 105px)
+    &:nth-child(5)
+      top: calc(3.2vw + 20vh + 175px)
+    &:nth-child(7)
+      top: calc(3.9vw + 20vh + 245px)
+    &:nth-child(9)
+      top: calc(4.6vw + 20vh + 315px)
+    &:nth-child(10)
+      top: calc(5.3vw + 20vh + 415px)
+      background: linear-gradient(-30deg, #01F3C8, #01E1E6)
+    &:nth-child(10):hover
+      cursor: pointer
+
+input
+  background: none
+  border: none
+  width: calc(0.7 * 30vw - 30px)
+  height: 40px
+  color: white
+  font-family: Poppins
+  font-weight: 600
+  padding-left: 30px
+  outline: none
+  &:focus
+    border: none
+    outline: none
+  &:hover
+    border: none
+    outline: none

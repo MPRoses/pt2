@@ -1,8 +1,120 @@
-{% extends "base.html" %}
+<html>
+    <head>
+        <title>Connectr.</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/landing.css') }}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.91/build/spline-viewer.js"></script>
+    </head>
+    <body>
+      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.91/build/spline-viewer.js"></script>
+      <div class="content">
+      
+        <img src="https://i.ibb.co/vs9fbnQ/card1bg.png" class="background-sphere fade-in" alt="background sphere" />
+        <img src="https://i.ibb.co/3TSwdhC/top-right.png" class="background-signal" alt="background shapes" />
+        <img src="https://i.ibb.co/vs9fbnQ/card1bg.png" class="background-sphere sphere-two fade-in" alt="background sphere" />
+      
+        <div class="mid-left">
+          <p>Connectr.</p>
+          <p>Connect with anyone, anywhere</p>
+          <p>Feeling disconnected? Connectr bridges the gap! Our web-based chat platform lets you connect with friends, family, and colleagues – instantly and effortlessly. Just like your favorite messaging apps, Connectr offers seamless communication, all from the comfort of your personal device. Join the conversation today – it's free and easy!</p>
+          <p class="get-started-p">GET STARTED</p>
+          <img src="https://i.ibb.co/NyLvCSr/Group-13-3.png" alt="oval container" class="get-started get-started-one" />
+          <img src="https://i.ibb.co/k1LkXVx/Group-13-4.png" alt="oval container" class="get-started-two" />
+          <img src="https://i.ibb.co/TMDVm3D/text-1-hq.png" class="text-balloon" />
+          <img src="https://i.ibb.co/YTjVPxw/text-2-hq.png" class="text-balloon text-balloon-2" />
+        </div>
+      
+        <div class="spline-phone img-enter">
+          <spline-viewer url="https://prod.spline.design/cW6Ljo-Cabherwsi/scene.splinecode" class="spline-bg-item"></spline-viewer>
+        </div>
+        <div class="credits">
+          <p>
+            © 2024 Jens van der Sloot and Arthur van der Sterren
+          </p>
+        </div>
+      
+      </div>
+      <div class="navbar-container">
+        <div class="navbar fade-in">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+      
+      <div class="preloader">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="logo fade-in">
+        <img src="https://i.ibb.co/ts2Bj3L/Logo-1.png" alt="green square" />
+        <img src="https://i.ibb.co/0M6Jd2S/C.png" alt="big letter c" />
+      </div>
 
-{% block content %}
-    <h1>Hi, {{ user.username }}!</h1>
-    {% for post in posts %}
-    <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
-    {% endfor %}
-{% endblock %}
+      <form action="/" method="POST" id="submit-button-login">
+        <div class="nav-items nav-sign nav-item-active">
+          <p>Sign in</p>
+          <p>Username</p>
+          <div>
+            <input type="text" id="username" placeholder="Enter your username">
+          </div>
+          <p>Password</p>
+          <div>
+            <input type="text" id="password" placeholder="Enter your password">
+          </div>
+          <p>FORGOT PASSWORD?</p>
+          <div class="submit-button-login"></div>
+          <p>SIGN IN</p>
+          <p class="error-message-login"></p>
+          <p class="switch-form">
+            Don't have an account? Sign up
+          </p>
+        </div>
+      </form>
+      
+      <form action="/register" method="POST" id="submit-button-register">
+        <div class="nav-items2 nav-register">
+          <p>
+            Register
+          </p>
+          <p>
+            Username
+          </p>
+          <div>
+            <input type="text" id="username-reg" placeholder="Enter your username">
+          </div>
+          <p>
+            Email
+          </p>
+          <div>
+            <input type="text" id="email-reg" placeholder="Enter your email">
+          </div>
+          <p>
+            Password
+          </p>
+          <div>
+            <input type="text" id="password-reg" placeholder="Enter your password">
+          </div>
+          <p>
+            Repeat password
+          </p>
+          <div>
+            <input type="text" id="password-repeat-reg" placeholder="Repeat your password">
+          </div>
+          <div class="submit-button-register"></div>
+          <p>
+            SIGN UP
+          </p>
+          <p class="error-message-register">
+          </p>
+          <p class="switch-form">
+            Already have an account? Sign in
+          </p>
+        </div>
+      </form>
+      <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+    </body>
+</html>
