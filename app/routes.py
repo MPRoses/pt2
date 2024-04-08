@@ -1,81 +1,131 @@
-from urllib.parse import urlsplit
-from flask import render_template, flash, redirect, url_for, request, jsonify
-from flask_login import login_user, logout_user, current_user, login_required
+from datetime import datetime, timezone
+from typing import Optional
 import sqlalchemy as sa
-from app import app, db
-from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from werkzeug.security import generate_password_hash, check_password_hash
+import sqlalchemy.orm as so
+from app import db
+from app import login
+from flask_login import UserMixin
+
+favourite_chats = db.Table('favourite_chats',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('chat_id', db.Integer, db.ForeignKey('chat.id'))
+)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def landing():
-    print("Received a request")  # Debugging statement
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
+class User(UserMixin, db.Model):
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
-    login_form = LoginForm(request.form)
-    register_form = RegistrationForm(request.form)
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
-    if request.method == 'POST':
-        print("Received a POST request")  # Debugging statement
-        print(f"Request form: {request.form}")  # New debugging statement
-        if 'login_submit' in request.form:
-            print("Login form was submitted")  # Debugging statement
-            if login_form.validate():
-                print("Login form data is valid")  # Debugging statement
-                user = User.query.filter_by(username=login_form.username.data).first()
-                if user is None or not user.check_password(login_form.password.data):
-                    print("Invalid username or password")  # Debugging statement
-                    return jsonify(error='Invalid username or password')
-                login_user(user, remember=login_form.remember_me.data)
-                next_page = request.args.get('next')
-                if not next_page or urlsplit(next_page).netloc != '':
-                    next_page = url_for('index')
-                return jsonify(redirect_url=next_page)
-            else:
-                print("Form validation failed")  # Debugging statement
-                print(f"Errors: {login_form.errors}")  # New debugging statement
-                return jsonify(error='Form validation failed')
-                
-        elif 'register_submit' in request.form:
-            print("Register form was submitted")  # Debugging statement
-            print(f"Register form data: {register_form.data}")  # New debugging statement
-            if register_form.validate():
-                print("Register form data is valid")  # Debugging statement
-                user = User(username=register_form.username.data, email=register_form.email.data)
-                user.set_password(register_form.password.data)
-                db.session.add(user)
-                db.session.commit()
-                flash('Congratulations, you are now a registered user!')
-                return jsonify(message='Registration successful')
-            else:
-                print("Form validation failed")  # Debugging statement
-                print(f"Errors: {register_form.errors}")  # New debugging statement
-                return jsonify(error='Form validation failed', form_errors=register_form.errors)
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,
+                                                unique=True)
+    email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,
+                                             unique=True)
+    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
-    return render_template('landing.html', title='Connectr.', login_form=login_form, register_form=register_form)
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(
+        back_populates='author')
 
-@app.route('/index')
-@login_required
-def index():
-    user = {'username': '123'}
-    return render_template("index.html", title='Home Page')
+    sent_requests = so.relationship(
+        'FriendRequest',
+        foreign_keys='FriendRequest.from_user_id',
+        backref='from_user_backref',
+        lazy='dynamic'
+    )
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    received_requests = so.relationship(
+        'FriendRequest',
+        foreign_keys='FriendRequest.to_user_id',
+        backref='to_user_backref',
+        lazy='dynamic'
+    )
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('landing'))
+    favourite_chats = db.relationship(
+        'Chat',
+        secondary=favourite_chats,
+        backref=db.backref('favourited_by', lazy='dynamic')
+    )
+
+    @property
+    def pending_requests(self):
+        return FriendRequest.query.filter_by(to_user_id=self.id, status=0)
+
+    @property
+    def friends(self):
+        return User.query.join(
+            FriendRequest, (FriendRequest.from_user_id == User.id) | (FriendRequest.to_user_id == User.id)
+        ).filter(FriendRequest.status == 1)
+
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+
+class Post(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    body: so.Mapped[str] = so.mapped_column(sa.String(140))
+    timestamp: so.Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
+                                               index=True)
+
+    author: so.Mapped[User] = so.relationship(back_populates='posts')
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.body)
+
+class Chat(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    users: so.WriteOnlyMapped['User'] = so.relationship(
+        'User',
+        secondary='chat_users',
+        backref=so.backref('chats', lazy='dynamic')
+    )
+    messages: so.WriteOnlyMapped['Message'] = so.relationship('Message', backref='chat', lazy='dynamic')
+
+class Message(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    text: so.Mapped[str] = so.mapped_column(sa.String(500))
+    timestamp: so.Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
+    chat_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Chat.id))
+
+    user: so.Mapped[User] = so.relationship('User', backref='messages')
+
+# Association table for many-to-many relationship between User and Chat
+chat_users = db.Table('chat_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('chat_id', db.Integer, db.ForeignKey('chat.id'))
+)
+
+
+class Friendship(db.Model):
+    __tablename__ = 'friendship'
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('friends', lazy='dynamic'))
+
+    def __repr__(self):
+        return '<Friendship {} - {}>'.format(self.user_id, self.friend_id)
+
+
+
+class FriendRequest(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    from_user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
+    to_user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
+    status: so.Mapped[int] = so.mapped_column(sa.Integer, default=0)  # 0 for pending, 1 for accepted
+
+    from_user: so.Mapped[User] = so.relationship(User, foreign_keys=[from_user_id], backref='from_user_backref')
+    to_user: so.Mapped[User] = so.relationship(User, foreign_keys=[to_user_id], backref='to_user_backref')
+
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
