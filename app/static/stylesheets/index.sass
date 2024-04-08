@@ -1,0 +1,654 @@
+body
+  background-color: #1A191E
+
+.logo 
+  display: none
+
+
+.content-right-container 
+  background: linear-gradient(-70deg, #000C08, #070707)
+  width: calc(100vw - 450px)
+  height: 100vh
+  position: fixed
+  right: 0
+  top: 0
+  z-index: 1
+  @media (max-width: 900px)
+    width: 100vw
+.content-left-container
+  width: 450px
+  height: 100vh
+  position: fixed
+  left: 0
+  top: 0
+  background: linear-gradient(-70deg, #1D1D1E, #020900)
+  transition: left .78s ease-in-out
+  z-index: 2
+.content-seperator
+  width: 40px
+  height: 40px
+  position: absolute
+  top: 25px
+  left: calc(450px - 6px)
+  filter: invert(1)
+  opacity: 0
+  pointer-events: none
+  transition: left .78s ease-in-out
+  &:hover
+    cursor: pointer
+.content-pfp
+  width: 40px
+  height: 40px
+  left: 40px
+  top: 40px
+  position: absolute
+  background-color: gray
+  border-radius: 100%
+  overflow: hidden
+.pfp-active
+  width: 15px
+  height: 15px
+  left: 68px
+  top: 36px
+  position: absolute
+  background-color: #64E581
+  border-radius: 100%
+.pfp-text
+  position: absolute
+  font-size: 1em
+  top: calc(70px - 20px)
+  font-family: "Poppins", sans-serif
+  font-weight: 700
+  color: white
+  left: 100px
+  
+.content-noti
+  width: 20px
+  left: calc(100% - 100px)
+  top: calc(70px - 20px)
+  position: absolute
+  filter: invert(1)
+  opacity: .3
+  transition: opacity .48s ease-in-out
+  &:hover
+    cursor: pointer
+    opacity: 1
+
+.content-settings
+  width: 20px
+  left: calc(100% - 60px)
+  top: 50px
+  opacity: .3
+  position: absolute
+  filter: invert(1)
+  transition: opacity .48s ease-in-out
+  &:hover
+    cursor: pointer
+    opacity: 1
+
+.search-container
+  width: calc(63% + 2.9vw)
+  height: 40px
+  left: 40px
+  position: absolute
+  top: 100px
+  border-radius: 25px
+  background-color: #2A2A2C
+
+.add-friend-container
+  background: linear-gradient(-40deg, #00FF94, #0AC9EC)
+  transition: height .22s ease-in-out
+  height: 0
+  overflow: hidden
+  &::placeholder
+    color: gray
+    opacity: .2
+
+.search-img
+  width: 20px
+  filter: invert(1)
+  opacity: .3
+  top: 110px
+  position: absolute
+  left:60px  
+  transition: opacity .4s ease-in-out
+  
+.friend-img
+  width: 20px
+  filter: invert(1)
+  top: 110px
+  position: absolute
+  left:60px  
+  transition: opacity .22s ease-in-out
+  opacity: 0
+input
+  background: none
+  border: none
+  width: calc(50% + 2.9vw)
+  padding-left: 60px
+  height: 40px
+  color: white
+  font-family: Poppins
+  font-weight: 600
+  outline: none
+  &:nth-of-type(1)
+    width: calc(40% + 2.9vw)  
+    height: 40px
+  &::placeholder
+    padding-left: 0 
+    color: unset
+  &:focus
+    border: none
+    outline: none
+  &:hover
+    border: none
+    outline: none
+
+#message
+  width: calc(100% - 40px) 
+  height: 100%
+  padding-left: 20px
+
+.add-friend
+  width: 30px
+  height: 30px
+  border-radius: 100%
+  left: calc(100% - 65px)
+  top: 105px
+  background: linear-gradient(-40deg, #00FF94, #0AC9EC)
+  transition: background 1s ease-in-out, transform .78s ease-in-out
+  transform: rotate(0deg)
+  opacity: 1
+  position: absolute
+  &:hover
+    cursor: pointer
+  img
+    position: relative
+    top: 7.5px
+    left: 7.5px
+    filter: invert(1)
+    width: 15px
+
+.add-friend-btn
+  position: absolute
+  top: 7.5px
+  padding: 4px
+  right: 10px
+  font-family: "Poppins", sans-serif
+  font-size: .8em
+  font-weight: 800
+  background-color: #232323
+  color: white
+  border-radius: 25px
+  &:hover
+    cursor: pointer
+  p
+    pointer-events: none 
+.nav
+  display: flex
+  justify-content: space-between
+  align-items: center
+  width: calc(90% - 40px)
+  left: 40px
+  position: absolute
+  height: 40px
+  top: 160px
+  transition: top .78s ease-in-out
+  .nav-item
+    font-family: "Poppins", sans-serif
+    font-weight: 700
+    color: white
+    opacity: 0.7
+    position: relative
+    overflow: hidden
+    transition: transform .78s ease-in-out
+    @media (max-width: "380px")
+      font-size: 3.3vw
+    &:hover
+      cursor: pointer
+      transform: scale(1.1)
+    &.nav-item-active
+      opacity: 1
+      transform: scale(1.1)
+    .underline
+      position: absolute
+      bottom: 0
+      left: 0
+      height: 2px
+      width: 100%
+      background-color: white
+      transform: translateX(-105%)
+      transition: transform 0.5s ease-in-out
+  .nav-item-active
+    .underline
+      transform: translateX(0)
+
+
+::-webkit-scrollbar
+  width: 10px
+
+::-webkit-scrollbar-track
+  background: transparent
+
+::-webkit-scrollbar-thumb
+  background: #232323
+  border-radius: 10px
+
+::-webkit-scrollbar-thumb:hover
+  background: #555
+
+
+.err-message-container
+  position: absolute
+  width: 100%
+  top: 160px
+  text-align: center
+  font-size: .7em
+  font-family: "Poppins", sans-serif
+  color: red
+  opacity: 0
+  transition: opacity .78s ease-in-out
+.content-user-container
+  width: 100%
+  height: 74%
+  position: absolute
+  left: 0
+  top: 215px
+  overflow-y: auto
+  overflow-x: hidden
+  transition: top .78s ease-in-out
+.content-user-item
+  width: 100%
+  height: 73px
+  position: relative
+  margin-bottom: 5px
+  top: 0
+  &:hover
+    cursor: pointer
+  pointer-events: all
+  *
+    pointer-events: none
+.user-item-pfp
+  width: 40px
+  height: 40px
+  top: 15px
+  left: 40px
+  position: relative
+  background-color: gray
+  border-radius: 100%
+  overflow: hidden
+.user-item-active
+  width: 15px
+  height: 15px
+  left: 68px
+  top: 12px
+  position: absolute
+  background-color: #64E581
+  border-radius: 100%
+.user-item-username
+  position: absolute
+  font-size: 1em
+  top: 15px
+  opacity: .8
+  font-family: "Poppins", sans-serif
+  font-weight: 700
+  color: white
+  left: 100px
+.user-item-lasttext
+  position: absolute
+  font-size: .6em
+  top: 40px
+  opacity: .3
+  font-family: "Poppins", sans-serif
+  font-weight: 700
+  color: white
+  left: 100px
+.user-item-date
+  position: absolute
+  font-size: 1em
+  top: 25px
+  right: 20px
+  opacity: .8
+  font-family: "Poppins", sans-serif
+  font-weight: 700
+  color: white
+.user-item-seperator
+  position: absolute
+  bottom: 0
+  border: 1px solid #2D2C34
+  width: 100%
+  left: 0
+
+.content-right-pfp
+  width: 60px
+  height: 60px
+  top: 35px
+  left: 40px
+  position: absolute
+  background-color: gray
+  border-radius: 100%
+  overflow: hidden
+.content-right-active
+  width: 25px
+  height: 25px
+  left: 80px
+  top: 27px
+  position: absolute
+  background-color: #64E581
+  border-radius: 100%
+.content-right-username
+  position: absolute
+  font-size: 2em
+  top: 35px
+  opacity: 1
+  font-family: "Poppins", sans-serif
+  font-weight: 700
+  color: white
+  left: 120px
+  @media (max-width: "460px")
+    font-size: 1.2em
+    top: 43px
+
+.content-right-bio
+  position: absolute
+  font-size: .8em
+  top: 75px
+  opacity: .5
+  font-family: "Poppins", sans-serif
+  font-weight: 700
+  color: white
+  left: 120px
+  @media (max-width: "460px")
+    font-size: .6em
+    top: 68px
+.content-right-star
+  position: absolute
+  top: 35px
+  right: 40px
+  width: 60px
+  height: 60px
+  background-color: #2B2A2F
+  transition: transform .78s ease-in-out
+  border-radius: 100%
+  &:hover
+    cursor: pointer
+    transform: scale(1.1)
+  img
+    position: absolute
+    top: 15px
+    left: 15px
+    width: 30px
+    filter: invert(1)
+  img:nth-child(2)
+    opacity: 0
+    transition: opacity .38s ease-in-out
+  @media (max-width: "460px")
+    top: 25px
+    width: 30px
+    height: 30px
+    right: 40px
+    img
+      top: 7.5px
+      left: 7.5px
+      width: 15px
+   
+.user-fav-active
+  opacity: 1 !important
+    
+
+.content-right-adduser
+  position: absolute
+  top: 35px
+  right: 120px
+  width: 60px
+  height: 60px
+  background-color: #2B2A2F
+  transition: transform .78s ease-in-out
+  border-radius: 100%
+  &:hover
+    cursor: pointer
+    transform: scale(1.1)
+  img
+    position: relative
+    top: 15px
+    left: 15px
+    width: 30px
+    filter: invert(1)
+  @media (max-width: "460px")
+    top: 65px
+    width: 30px
+    height: 30px
+    right: 40px
+    img
+      top: 7.5px
+      left: 7.5px
+      width: 15px
+
+.content-right-seperator
+  height: 0
+  top: 130px
+  border-bottom: 1px solid #2D2C34
+
+.content-settings-container
+  width: 450px
+  height: 100vh
+  position: absolute
+  left: 0
+  top: -150vh
+  background: linear-gradient(-70deg, #1D1D1E, #020900)
+  z-index: 3
+  transition: top .78s ease-in-out, opacity .78s ease-in-out
+  p
+    font-family: "Poppins", sans-serif
+    font-weight: 700
+    font-size: 2em
+    color: white
+    position: absolute
+    top: 80px
+    left: 40px
+  p:nth-child(2)
+    font-size: 1em
+    top: 40px
+    font-weight: 300
+    left: calc(100% - 43px - 40px)
+    opacity: 1
+    &:hover
+      cursor: pointer
+  div 
+    width: 100%
+    position: absolute
+    top: 130px
+    border-bottom: 2px solid #2D2C34
+  div:nth-child(4)
+    width: 80px
+    height: 80px
+    overflow: hidden
+    border-radius: 100%
+    left: 40px
+    top: 170px
+    &:hover
+      cursor: pointer
+
+.switch-img
+  position: absolute
+  filter: invert(1)
+  width: 30px
+  height: 30px
+  left: 65px
+  top: 195px
+  pointer-events: none
+.main-text-container
+  width: 100%
+  height: calc(68%)
+  position: absolute
+  right: 0 
+  top: 133px
+  z-index: 4
+  overflow-y: auto
+
+.main-text-message
+  max-width: 40%
+  width: fit-content
+  padding: 15px
+  margin-top: 10px
+  position: relative
+  border-radius: 50px 50px 50px 0
+  left: 50px
+  background: linear-gradient(-40deg, #00FF94, #0AC9EC)
+  background-color: red
+  p
+    font-family: "Poppins", sans-serif
+    font-weight: 300
+    word-wrap: break-word
+    font-size: 1em
+    color: white
+    line-height: 120%
+
+.my-text
+  border-radius: 50px 50px 0 50px
+  background: none
+  background-color: #232323
+  box-shadow: 0px 0px 15px 10px #333333 inset
+  left: calc(100% - fit-content)
+ 
+.main-message-container 
+  width: 100%
+  height: 20%
+  position: absolute
+  left: 0
+  top: calc(131px + 65%)
+  background-color: transparent
+
+.message-actually-right
+  width: 82%
+  left: 50px
+  height: calc(20% + 4vh)
+  top: calc(50% - 0.5 * (20% + 4vh))
+  background-color: #232323
+  box-shadow: 0px 0px 15px 10px #333333 inset
+  position: absolute
+  @media (max-width: "1600px")
+    width: 78%
+  @media (max-width: "1430px")
+    width: 74%
+  @media (max-width: "1200px")
+    width: 70%
+  @media (max-width: "1100px")
+    width: 66%
+  @media (max-width: "1000px")
+    width: 55%
+  @media (max-width: "900px")
+    width: 70%
+  @media (max-width: "700px")
+    width: 62%
+  @media (max-width: "530px")
+    width: 57%
+  @media (max-width: "430px")
+    width: 52%
+  img
+    position: absolute
+    width: 30px
+    height: 30px 
+    filter: invert(1)
+    left: 30px
+    top: calc(50% - 0.5 * (30px))
+    opacity: .5
+    &:hover
+      cursor: pointer
+
+.message-submit-btn
+  height: 65px
+  width: 65px
+  position: absolute
+  left: calc(100% - 65px - 50px)
+  top: calc(50% - 0.5 * (65px))
+  &:hover
+    cursor: pointer
+    img:nth-child(2)
+      opacity: 1
+    img
+      transform: scale(1.1)
+  img
+    position: absolute
+    width: 80px
+    height: 80px
+    left: -7.5px
+    top: -7.5px
+    pointer-events: none
+    transition: opacity .32s ease-in-out, transform .62s ease-in-out
+    &:nth-child(2)
+      opacity: 0
+
+      
+.noti-amount
+  font-family: "Poppins", sans-serif
+  font-size: 1em
+  color: white
+  position: absolute
+  z-index: 3
+  left: calc(100% - 80px)
+  top: calc(70px - 30px)
+  
+.content-noti
+  width: 20px
+  left: calc(100% - 100px)
+  top: calc(70px - 20px)
+  position: absolute
+  filter: invert(1)
+  opacity: .3
+  transition: opacity .48s ease-in-out
+  &:hover
+    cursor: pointer
+    opacity: 1
+.noti-container
+  width: calc(67% + 2.9vw)
+  height: fit-content
+  position: absolute
+  top: 90px
+  border-radius: 25px 0px 25px 25px
+  left: 40px
+  background: linear-gradient(-70deg, #1D1D1E, #020900)
+  z-index: 3
+  transition: height .78s ease-in-out
+  overflow: hidden
+
+.noti-spacer
+  position: relative
+  width: 100%
+  height: 20px
+
+
+.remove-friend-button:hover
+  pointer: cursor
+  
+.noti-from
+  position: relative
+  width: 100%
+  height: 50px
+  border-bottom: 1px solid #232323
+  border-top: 1px solid #232323
+  p
+    position: absolute
+    color: white
+    font-family: "Poppins", sans-serif
+    font-weight: 500
+    font-size: 1em
+    left: 20px
+    top: 20px
+    &:nth-child(1)
+      top: 5px
+      font-size: .7em
+  img
+    width: 30px
+    height: 30px
+    position: absolute
+    top: 10px
+    filter: invert(1)
+    right: 70px
+    opacity: 1
+    transition: opacity .43s ease-in-out
+    &:hover
+      cursor: pointer
+      opacity: .5
+    &:nth-child(4)
+      right: 20px 

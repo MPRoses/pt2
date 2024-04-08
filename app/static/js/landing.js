@@ -1,7 +1,7 @@
 function reloadItems() {
   if (window.matchMedia("(max-width: 1300px)").matches) {
     $(".nav-items, .nav-items2").css("width", "100vw");
-    $(".spline-phone").css("display", "none");
+    $(".spline-phone").css("display", "block");
     $("input").css("width", "calc(70vw)");
     $(".nav-items p:nth-child(8), .nav-items2 p:nth-child(11)").css(
       "left", "calc(50vw - 0.5 * 56px)"
@@ -10,7 +10,7 @@ function reloadItems() {
   } else {
     console.log("greater than 1300");
     $(".nav-items, .nav-items2").css("width", "30vw");
-    $(".spline-phone").css("display", "none");
+    $(".spline-phone").css("display", "block");
     $("input").css("width", "calc(0.7 * 30vw)");
     $(".nav-items p:nth-child(8), .nav-items2 p:nth-child(11)").css(
       "left", "calc(4vw + (0.7 * 15vw) - 0.5 * 56px)"
