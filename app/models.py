@@ -12,8 +12,11 @@ favourite_chats = db.Table('favourite_chats',
     db.Column('chat_id', db.Integer, db.ForeignKey('chat.id'))
 )
 
-
 class User(UserMixin, db.Model):
+    privacy: so.Mapped[str] = so.mapped_column(sa.String(64), default='private')
+    is_active: so.Mapped[int] = so.mapped_column(sa.Integer, default=1)
+
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -26,6 +29,8 @@ class User(UserMixin, db.Model):
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,
                                              unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    
+    last_checked = db.Column(db.DateTime, default=datetime.utcnow)
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(
         back_populates='author')
@@ -79,13 +84,15 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
 class Chat(db.Model):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    users: so.WriteOnlyMapped['User'] = so.relationship(
+    id = db.Column(db.Integer, primary_key=True)
+    users = db.relationship(
         'User',
         secondary='chat_users',
-        backref=so.backref('chats', lazy='dynamic')
+        backref=db.backref('chats', lazy='dynamic')
     )
-    messages: so.WriteOnlyMapped['Message'] = so.relationship('Message', backref='chat', lazy='dynamic')
+    messages = db.relationship('Message', backref='chat', lazy='dynamic')
+
+
 
 class Message(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)

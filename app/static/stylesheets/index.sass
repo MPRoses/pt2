@@ -45,6 +45,18 @@ body
   background-color: gray
   border-radius: 100%
   overflow: hidden
+.public-usr-btn 
+  top: calc(100% - 80px)
+  position: absolute
+  background-color: unset
+  filter: invert(1)
+  opacity: .2
+  transition: opacity 1.33s var(--cubic-1)
+  z-index: 3
+  pointer-events: all
+  &:hover
+    cursor: pointer
+    opacity: 1
 .pfp-active
   width: 15px
   height: 15px
@@ -169,6 +181,39 @@ input
     filter: invert(1)
     width: 15px
 
+
+.item-tag
+  top: 270px !important
+.item-public
+  top: 320px !important
+  font-size: 1em !important
+  font-weight: 300 !important
+  opacity: .4 !important
+  transition: opacity .76s var(--cubic-1) !important
+  &:hover
+    cursor: pointer
+    opacity: .7 !important
+.item-seperator
+  top: 320px !important
+  left: 95px !important
+  font-size: 1em !important
+  font-weight: 300 !important
+  opacity: .4 !important
+  transition: opacity .76s var(--cubic-1) !important
+.item-private
+  top: 320px !important
+  left: 110px !important
+  font-size: 1em !important
+  font-weight: 300 !important
+  opacity: .4 !important
+  transition: opacity .76s var(--cubic-1) !important
+  &:hover
+    cursor: pointer
+    opacity: .7 !important
+
+.item-very-active
+  opacity: 1 !important
+
 .add-friend-btn
   position: absolute
   top: 7.5px
@@ -184,6 +229,39 @@ input
     cursor: pointer
   p
     pointer-events: none 
+
+.add-user-btn
+  position: absolute
+  top: 7.5px
+  padding: 4px
+  right: 10px
+  font-family: "Poppins", sans-serif
+  font-size: .8em
+  font-weight: 800
+  background-color: #232323
+  color: white
+  border-radius: 25px
+  &:hover
+    cursor: pointer
+  p
+    pointer-events: none 
+.content-right-empty
+  z-index: 100000
+  position: absolute
+  opacity: 0
+  width: 100%
+  height: 100%
+  background-color: #232323
+  transition: opacity .33s var(--cubic-1)
+  p
+    font-family: "Poppins", sans-serif
+    font-size: 1em
+    font-weight: 300
+    position: relative
+    text-align: center
+    top: 40%
+    max-width: 100%
+    color: white
 .nav
   display: flex
   justify-content: space-between
@@ -352,7 +430,7 @@ input
 .content-right-bio
   position: absolute
   font-size: .8em
-  top: 75px
+  top: 80px
   opacity: .5
   font-family: "Poppins", sans-serif
   font-weight: 700
@@ -382,7 +460,7 @@ input
   img:nth-child(2)
     opacity: 0
     transition: opacity .38s ease-in-out
-  @media (max-width: "460px")
+  @media (max-width: "1020px")
     top: 25px
     width: 30px
     height: 30px
@@ -414,7 +492,7 @@ input
     left: 15px
     width: 30px
     filter: invert(1)
-  @media (max-width: "460px")
+  @media (max-width: "1020px")
     top: 65px
     width: 30px
     height: 30px
@@ -424,10 +502,165 @@ input
       left: 7.5px
       width: 15px
 
+.content-right-adduser-maincontainer
+  position: absolute
+  top: 132px
+  width: 320px
+  height: 0
+  z-index: 20
+  overflow: hidden
+  background-color: red
+  right: 120px
+  border-radius: 25px 0px 25px 25px
+  background: linear-gradient(-70deg, #1D1D1E, #020900)
+  transition: height .46s var(--cubic-1)
+  p
+    font-family: "Poppins", sans-serif
+    font-size: .8em
+    color: white
+    padding-top: 9px
+    position: relative
+    left: 17%
+    max-width: 80%
+
+.content-adduser-open
+  height: 120px
+
+
+.add-user-container
+  background: linear-gradient(-40deg, #00FF94, #0AC9EC)
+  transition: height .22s ease-in-out
+  height: 40px
+  top: 70px
+  overflow: hidden
+  &::placeholder
+    color: gray
+    opacity: .2
+  p
+    padding: 0
+    left: unset
+    max-width: unset
+
+.usr-img
+  width: 20px
+  filter: invert(1)
+  top: 80px
+  position: absolute
+  left:60px  
+  transition: opacity .22s ease-in-out
+  opacity: 1
+
+
+.remove-friend-btn
+  position: absolute
+  top: 35px
+  right: 200px
+  width: 60px
+  height: 60px
+  background-color: #2B2A2F
+  transition: transform .78s ease-in-out
+  border-radius: 100%
+  &:hover
+    cursor: pointer
+    transform: scale(1.1)
+  img
+    position: relative
+    top: 15px
+    left: 15px
+    width: 30px
+    filter: invert(1)
+  @media (max-width: "1020px")
+    top: 45px
+    width: 30px
+    height: 30px
+    right: 80px
+    img
+      top: 7.5px
+      left: 7.5px
+      width: 15px
+
+.recheck
+  position: absolute
+  width: calc(4vw + 250px)
+  height: calc(4vw + 250px)
+  left: calc(50vw - 0.5 * (4vw + 250px))
+  background-color: #232323
+  opacity: 0
+  top: -120vh
+  transition: top .42s var(--cubic-1), opacity .42s var(--cubic-1)
+  z-index: 20
+  p
+    position: relative
+    top: 10%
+    text-align: center  
+    font-family: "Poppins", sans-serif    
+    font-weight: 700
+    font-size: 1.2em
+    color: white
+  div
+    width: 100px
+    height: 100px
+    position: absolute
+    border-radius: 50px
+    background-color: white
+    transition: background-color .42s var(--cubic-1) 
+    bottom: 20%
+    left: calc(50% - 50px)
+    &:hover
+      cursor: pointer
+    img 
+      pointer-events: none
+      width: 40%
+      height: 40%
+      position: relative
+      top: 30%
+      left: 30%
+
+.recheck-open
+  top: calc(50vh - 0.5 * (4vw + 250px))
+  opacity: 1
+
 .content-right-seperator
   height: 0
   top: 130px
   border-bottom: 1px solid #2D2C34
+
+.content-publiclist-container
+  width: 450px
+  height: 100vh
+  position: absolute
+  left: 0
+  top: -150vh
+  background: linear-gradient(-70deg, #1D1D1E, #020900)
+  z-index: 10
+  transition: top .78s ease-in-out, opacity .78s ease-in-out
+  p
+    font-family: "Poppins", sans-serif
+    font-weight: 700
+    font-size: 2em
+    color: white
+    position: absolute
+    top: 80px
+    left: 40px
+    &:nth-child(2)
+      font-size: 1em
+      top: 40px
+      font-weight: 300
+      left: calc(100% - 43px - 40px)
+      opacity: 1
+      &:hover
+        cursor: pointer
+  div 
+    width: 100%
+    position: absolute
+    top: 130px
+    border-bottom: 2px solid #2D2C34
+
+.publiclist-p-item
+  position: relative !important
+  top: 150px !important
+  font-size: 1em !important
+  font-weight: 300 !important
 
 .content-settings-container
   width: 450px
@@ -468,7 +701,6 @@ input
     top: 170px
     &:hover
       cursor: pointer
-
 .switch-img
   position: absolute
   filter: invert(1)
@@ -503,6 +735,8 @@ input
     font-size: 1em
     color: white
     line-height: 120%
+    &:nth-child(2)
+      font-size: .6em
 
 .my-text
   border-radius: 50px 50px 0 50px
@@ -522,8 +756,8 @@ input
 .message-actually-right
   width: 82%
   left: 50px
-  height: calc(20% + 4vh)
-  top: calc(50% - 0.5 * (20% + 4vh))
+  height: 60px
+  top: calc(50% - 0.5 * 60px)
   background-color: #232323
   box-shadow: 0px 0px 15px 10px #333333 inset
   position: absolute
@@ -612,15 +846,22 @@ input
   transition: height .78s ease-in-out
   overflow: hidden
 
+.noti-empty    
+  position: absolute
+  color: white
+  font-family: "Poppins", sans-serif
+  font-weight: 500
+  font-size: 1em
+  left: 20px
+  opacity: 0
+  top: 7px
+  transition: opacity .57s ease-in-out
+
 .noti-spacer
   position: relative
   width: 100%
   height: 20px
 
-
-.remove-friend-button:hover
-  pointer: cursor
-  
 .noti-from
   position: relative
   width: 100%
@@ -652,3 +893,5 @@ input
       opacity: .5
     &:nth-child(4)
       right: 20px 
+
+

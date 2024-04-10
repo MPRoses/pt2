@@ -9,9 +9,12 @@
         <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.91/build/spline-viewer.js"></script>
     </head>
     <body>
-
-      <div class="remove-friend-button" style="position: absolute; bottom: 0; right: 0; z-index: 10; width: 10vw; height: 10vw; background-color: pink"></div>
-     
+      <div class="recheck">
+        <p>Are you sure?</p>
+        <div class="recheck-btn">
+          <img src="https://i.ibb.co/kh5XsN4/delete-1.png" alt="delete chat"/>
+        </div>
+      </div>
       <div class="preloader">
         <div></div>
         <div></div>
@@ -24,16 +27,17 @@
       
       <div class="content">
         <div class="content-right-container">
+          <div class="content-right-empty"><p>No chats or friends, add some at the top left or on the public list : )</p></div>
           <div>
             <div class="content-right-pfp">
               <img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" />
             </div>
             <div class="content-right-active"></div>
             <p class="content-right-username">
-              John Doe
+
             </p>
             <p class="content-right-bio">
-              I like apples
+
             </p>
             <div class="content-right-star">
               <img src="https://i.ibb.co/LhFGbBT/star.png" alt="favourite user" />
@@ -41,6 +45,19 @@
             </div>
             <div class="content-right-adduser">
               <img src="https://i.ibb.co/92mrVPQ/add-user-1.png" alt="add user" />
+            </div>
+            <div class="content-right-adduser-maincontainer">
+              <div class="search-container add-user-container add-user-open">
+                <input type="text" id="add-user" placeholder="Add user">
+                <div class="add-user-btn">
+                  <p>&nbsp;ADD&nbsp;</p>
+                </div>
+              </div>
+              <img src="https://i.ibb.co/92mrVPQ/add-user-1.png" alt="search" class="usr-img" />
+              <p>Doing this will add a new user to this chat, making him be able to see your chat history</p>
+            </div>
+            <div class="remove-friend-btn">
+              <img src="https://i.ibb.co/kh5XsN4/delete-1.png" alt="add user" />
             </div>
             <div class="user-item-seperator content-right-seperator"></div>
           </div>
@@ -66,13 +83,14 @@
         </div>
         <div class="content-left-container item-open">
           <div class="content-top">
+            <img src="https://i.ibb.co/JK8M8ng/world.png" alt="public usr list" class="content-pfp public-usr-btn"/>
             <img src="https://i.ibb.co/2tS41HC/menu-1.png" alt="seperator" class="content-seperator" />
             <div class="content-pfp">
               <img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" />
             </div>
             <div class="pfp-active"></div>
             <div class="pfp-text">{{ username['username'] }}</div>
-            <img src="https://i.ibb.co/3hdKdQ9/notification.png" alt"noti" class="content-noti" />
+            <img src="https://i.ibb.co/3hdKdQ9/notification.png" alt="noti" class="content-noti" />
             <p class="noti-amount"></p>
             <div class="noti-container">
               <div class="noti-spacer">
@@ -110,7 +128,7 @@
             <img src="https://i.ibb.co/92mrVPQ/add-user-1.png" alt="search" class="friend-img" />
             <div class="add-friend">
               <img src="https://i.ibb.co/9YMgT1L/plus.png" alt="plus" />
-            </div </div>
+            </div>
             <div class="nav">
               <p class="nav-item" tag="active">ACTIVE NOW<span class="underline"></span></p>
               <p class="nav-item" tag="favourite">FAVOURITE<span class="underline"></span></p>
@@ -126,7 +144,16 @@
             <div>
               <img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" />
             </div>
-            <img src="https://i.ibb.co/tpG0YgR/refresh.png" class="switch-img" alt="switch image" />
+            <img src="https://i.ibb.co/tpG0YgR/refresh.png" class="switch-img" alt="switch image" style="display: none" />
+            <p class="item-tag">Privacy</p>
+            <p class="item-public">Public</p>
+            <p class="item-seperator">|</p>
+            <p class="item-private item-very-active">Private</p>
+          </div>
+          <div class="content-publiclist-container">
+            <p class="publiclist-title">Public user list</p>
+            <p class="publiclist-exit">Exit</p>
+            <div></div>
           </div>
         </div>
       <script src="{{ url_for('static', filename='js/index.js') }}"></script>

@@ -58,6 +58,21 @@ body {
   overflow: hidden;
 }
 
+.public-usr-btn {
+  top: calc(100% - 80px);
+  position: absolute;
+  background-color: unset;
+  filter: invert(1);
+  opacity: 0.2;
+  transition: opacity 1.33s var(--cubic-1);
+  z-index: 3;
+  pointer-events: all;
+}
+.public-usr-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
 .pfp-active {
   width: 15px;
   height: 15px;
@@ -204,6 +219,48 @@ input:hover {
   width: 15px;
 }
 
+.item-tag {
+  top: 270px !important;
+}
+
+.item-public {
+  top: 320px !important;
+  font-size: 1em !important;
+  font-weight: 300 !important;
+  opacity: 0.4 !important;
+  transition: opacity 0.76s var(--cubic-1) !important;
+}
+.item-public:hover {
+  cursor: pointer;
+  opacity: 0.7 !important;
+}
+
+.item-seperator {
+  top: 320px !important;
+  left: 95px !important;
+  font-size: 1em !important;
+  font-weight: 300 !important;
+  opacity: 0.4 !important;
+  transition: opacity 0.76s var(--cubic-1) !important;
+}
+
+.item-private {
+  top: 320px !important;
+  left: 110px !important;
+  font-size: 1em !important;
+  font-weight: 300 !important;
+  opacity: 0.4 !important;
+  transition: opacity 0.76s var(--cubic-1) !important;
+}
+.item-private:hover {
+  cursor: pointer;
+  opacity: 0.7 !important;
+}
+
+.item-very-active {
+  opacity: 1 !important;
+}
+
 .add-friend-btn {
   position: absolute;
   top: 7.5px;
@@ -221,6 +278,45 @@ input:hover {
 }
 .add-friend-btn p {
   pointer-events: none;
+}
+
+.add-user-btn {
+  position: absolute;
+  top: 7.5px;
+  padding: 4px;
+  right: 10px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.8em;
+  font-weight: 800;
+  background-color: #232323;
+  color: white;
+  border-radius: 25px;
+}
+.add-user-btn:hover {
+  cursor: pointer;
+}
+.add-user-btn p {
+  pointer-events: none;
+}
+
+.content-right-empty {
+  z-index: 100000;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #232323;
+  transition: opacity 0.33s var(--cubic-1);
+}
+.content-right-empty p {
+  font-family: "Poppins", sans-serif;
+  font-size: 1em;
+  font-weight: 300;
+  position: relative;
+  text-align: center;
+  top: 40%;
+  max-width: 100%;
+  color: white;
 }
 
 .nav {
@@ -428,7 +524,7 @@ input:hover {
 .content-right-bio {
   position: absolute;
   font-size: 0.8em;
-  top: 75px;
+  top: 80px;
   opacity: 0.5;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
@@ -467,7 +563,7 @@ input:hover {
   opacity: 0;
   transition: opacity 0.38s ease-in-out;
 }
-@media (max-width: 460px) {
+@media (max-width: 1020px) {
   .content-right-star {
     top: 25px;
     width: 30px;
@@ -506,7 +602,7 @@ input:hover {
   width: 30px;
   filter: invert(1);
 }
-@media (max-width: 460px) {
+@media (max-width: 1020px) {
   .content-right-adduser {
     top: 65px;
     width: 30px;
@@ -520,10 +616,189 @@ input:hover {
   }
 }
 
+.content-right-adduser-maincontainer {
+  position: absolute;
+  top: 132px;
+  width: 320px;
+  height: 0;
+  z-index: 20;
+  overflow: hidden;
+  background-color: red;
+  right: 120px;
+  border-radius: 25px 0px 25px 25px;
+  background: linear-gradient(-70deg, #1D1D1E, #020900);
+  transition: height 0.46s var(--cubic-1);
+}
+.content-right-adduser-maincontainer p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.8em;
+  color: white;
+  padding-top: 9px;
+  position: relative;
+  left: 17%;
+  max-width: 80%;
+}
+
+.content-adduser-open {
+  height: 120px;
+}
+
+.add-user-container {
+  background: linear-gradient(-40deg, #00FF94, #0AC9EC);
+  transition: height 0.22s ease-in-out;
+  height: 40px;
+  top: 70px;
+  overflow: hidden;
+}
+.add-user-container::placeholder {
+  color: gray;
+  opacity: 0.2;
+}
+.add-user-container p {
+  padding: 0;
+  left: unset;
+  max-width: unset;
+}
+
+.usr-img {
+  width: 20px;
+  filter: invert(1);
+  top: 80px;
+  position: absolute;
+  left: 60px;
+  transition: opacity 0.22s ease-in-out;
+  opacity: 1;
+}
+
+.remove-friend-btn {
+  position: absolute;
+  top: 35px;
+  right: 200px;
+  width: 60px;
+  height: 60px;
+  background-color: #2B2A2F;
+  transition: transform 0.78s ease-in-out;
+  border-radius: 100%;
+}
+.remove-friend-btn:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+.remove-friend-btn img {
+  position: relative;
+  top: 15px;
+  left: 15px;
+  width: 30px;
+  filter: invert(1);
+}
+@media (max-width: 1020px) {
+  .remove-friend-btn {
+    top: 45px;
+    width: 30px;
+    height: 30px;
+    right: 80px;
+  }
+  .remove-friend-btn img {
+    top: 7.5px;
+    left: 7.5px;
+    width: 15px;
+  }
+}
+
+.recheck {
+  position: absolute;
+  width: calc(4vw + 250px);
+  height: calc(4vw + 250px);
+  left: calc(50vw - 0.5 * (4vw + 250px));
+  background-color: #232323;
+  opacity: 0;
+  top: -120vh;
+  transition: top 0.42s var(--cubic-1), opacity 0.42s var(--cubic-1);
+  z-index: 20;
+}
+.recheck p {
+  position: relative;
+  top: 10%;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 1.2em;
+  color: white;
+}
+.recheck div {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  border-radius: 50px;
+  background-color: white;
+  transition: background-color 0.42s var(--cubic-1);
+  bottom: 20%;
+  left: calc(50% - 50px);
+}
+.recheck div:hover {
+  cursor: pointer;
+}
+.recheck div img {
+  pointer-events: none;
+  width: 40%;
+  height: 40%;
+  position: relative;
+  top: 30%;
+  left: 30%;
+}
+
+.recheck-open {
+  top: calc(50vh - 0.5 * (4vw + 250px));
+  opacity: 1;
+}
+
 .content-right-seperator {
   height: 0;
   top: 130px;
   border-bottom: 1px solid #2D2C34;
+}
+
+.content-publiclist-container {
+  width: 450px;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: -150vh;
+  background: linear-gradient(-70deg, #1D1D1E, #020900);
+  z-index: 10;
+  transition: top 0.78s ease-in-out, opacity 0.78s ease-in-out;
+}
+.content-publiclist-container p {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 2em;
+  color: white;
+  position: absolute;
+  top: 80px;
+  left: 40px;
+}
+.content-publiclist-container p:nth-child(2) {
+  font-size: 1em;
+  top: 40px;
+  font-weight: 300;
+  left: calc(100% - 43px - 40px);
+  opacity: 1;
+}
+.content-publiclist-container p:nth-child(2):hover {
+  cursor: pointer;
+}
+.content-publiclist-container div {
+  width: 100%;
+  position: absolute;
+  top: 130px;
+  border-bottom: 2px solid #2D2C34;
+}
+
+.publiclist-p-item {
+  position: relative !important;
+  top: 150px !important;
+  font-size: 1em !important;
+  font-weight: 300 !important;
 }
 
 .content-settings-container {
@@ -612,6 +887,9 @@ input:hover {
   color: white;
   line-height: 120%;
 }
+.main-text-message p:nth-child(2) {
+  font-size: 0.6em;
+}
 
 .my-text {
   border-radius: 50px 50px 0 50px;
@@ -633,8 +911,8 @@ input:hover {
 .message-actually-right {
   width: 82%;
   left: 50px;
-  height: calc(20% + 4vh);
-  top: calc(50% - 0.5 * (20% + 4vh));
+  height: 60px;
+  top: calc(50% - 30px);
   background-color: #232323;
   box-shadow: 0px 0px 15px 10px #333333 inset;
   position: absolute;
@@ -763,14 +1041,22 @@ input:hover {
   overflow: hidden;
 }
 
+.noti-empty {
+  position: absolute;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 1em;
+  left: 20px;
+  opacity: 0;
+  top: 7px;
+  transition: opacity 0.57s ease-in-out;
+}
+
 .noti-spacer {
   position: relative;
   width: 100%;
   height: 20px;
-}
-
-.remove-friend-button:hover {
-  pointer: cursor;
 }
 
 .noti-from {

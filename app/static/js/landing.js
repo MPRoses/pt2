@@ -206,9 +206,6 @@ $(document).ready(function () {
           csrf_token: $('input[name=csrf_token]').val() 
         },
         success: function(response) {
-          console.log("Server response: ", response); 
-          console.log("|||||||||||||||||||||||||");
-          console.log(response.error);
           if (response.error) {
             $('.error-message-login').html(response.error);
           } else {

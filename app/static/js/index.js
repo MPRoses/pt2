@@ -37,6 +37,23 @@ $(document).ready(function () {
   updateNoti();
   getFriendRequestDB();
   getFriendsDB();
+  getUserPrivacy();
+
+  console.log("1");
+  if (localStorage.getItem("nav")) {
+    console.log("2");
+    $(".nav-item").removeClass("nav-item-active");
+    console.log("3");
+    if  (localStorage.getItem("nav") == "active") {
+      $(".nav-item").eq(0).addClass("nav-item-active");
+    } else if  (localStorage.getItem("nav") == "favourite") {
+      $(".nav-item").eq(1).addClass("nav-item-active");
+    } else {
+      $(".nav-item").eq(2).addClass("nav-item-active");
+    }
+
+
+  }
 
   function debounce(func, wait) {
     var timeout;
@@ -105,6 +122,11 @@ $(document).ready(function () {
   });
 
   $(".nav-item").on("click", function () {
+    if (localStorage.getItem("nav")) {
+      localStorage.removeItem("nav");
+    }
+    localStorage.setItem("nav", `${$(this).attr("tag")}`)
+
     $(".nav-item-active").removeClass("nav-item-active");
     $(".nav-item-active").css("opacity", "0.7");
     $(this).addClass("nav-item-active");
@@ -112,12 +134,68 @@ $(document).ready(function () {
     activeFilter = $(this).attr("tag");
     filterUsers();
   });
-  //
+  
+
+  function getUserPrivacy() {
+    $.ajax({
+        url: '/get_user_privacy',
+        type: 'GET',
+        success: function(response) {
+
+            if (response.privacy === "public") {
+              $(".item-very-active").removeClass("item-very-active");
+              $(".item-public").addClass("item-very-active")
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+
+  
+  $("#add-friend").on("keypress", function (event) {
+    var keycode = event.keyCode ? event.keyCode : event.which;
+    if (keycode == "13") {
+      $(".add-friend-btn").click();
+    }
+  });
 
   $(".add-friend-btn").on("click", () => {
     var username = $("#add-friend").val();
     sendFriendRequestDB(username);
   });
+
+  $("#add-user").on("keypress", function (event) {
+    var keycode = event.keyCode ? event.keyCode : event.which;
+    if (keycode == "13") {
+      $(".add-user-btn").click();
+    }
+  });
+
+
+  $(".add-user-btn").on("click", () => {
+    var username = $("#add-user").val();
+    var currentChatUsers = $(".content-right-username").text();
+    // Create a new chat with these users
+    $.ajax({
+        url: '/chat_add_user',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            new_user: username,
+            current_chat_users: currentChatUsers
+        }),
+        success: function(data) {
+            getFriendsDB();
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+  });
+
 
   $(".add-friend").on("click", () => {
     if ($(".add-friend-container").hasClass("friend-is-active")) {
@@ -149,12 +227,12 @@ $(document).ready(function () {
       } else {
         $(".content-seperator").css("left", "calc(100VW - 20px)");
       }
-      $(".content-left-container, .content-settings-container").css(
+      $(".content-left-container, .content-settings-container, .content-publiclist-container").css(
         "width",
         "100vw"
       );
     } else {
-      $(".content-left-container, .content-settings-container").css(
+      $(".content-left-container, .content-settings-container, .content-publiclist-container").css(
         "width",
         "450px"
       );
@@ -191,7 +269,11 @@ $(document).ready(function () {
         $(".noti-container *").remove()
 
         $(".noti-container").append(`<div class="noti-spacer"></div>`);
+        $(".noti-container").append(`<p class="noti-empty">No friend requests</p>`)
+        var total = 0;
+
         data.forEach(username => {
+          total++;
           var div = $('<div>', { class: 'noti-from' });
 
           div.html(`
@@ -266,40 +348,45 @@ $(document).ready(function () {
       return;
     }
     var userReceiving = $(".content-right-username").text();
+
+    // WILL LATER CHANGE THIS SUCH THAT ONEWEEKAGO IS CHECKED UPON LOADING
     // Get the current date and time
     let now = new Date();
-
     now.setHours(now.getHours() + 2);
+  
+    let timestampNow = new Intl.DateTimeFormat('en-US', { weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' }).format(now);
 
-    // Convert to a string in the format 'YYYY-MM-DD HH:MM:SS'
     let timestamp = now.getUTCFullYear() +
-        '-' + String(now.getUTCMonth() + 1).padStart(2, '0') +
-        '-' + String(now.getUTCDate()).padStart(2, '0') +
-        ' ' + String(now.getUTCHours()).padStart(2, '0') +
-        ':' + String(now.getUTCMinutes()).padStart(2, '0') +
-        ':' + String(now.getUTCSeconds()).padStart(2, '0');
+    '-' + String(now.getUTCMonth() + 1).padStart(2, '0') +
+    '-' + String(now.getUTCDate()).padStart(2, '0') +
+    ' ' + String(now.getUTCHours()).padStart(2, '0') +
+    ':' + String(now.getUTCMinutes()).padStart(2, '0') +
+    ':' + String(now.getUTCSeconds()).padStart(2, '0');
+
+    $(".chat-item-active").children().eq(3).text(newText);
+    $(".chat-item-active").children().eq(4).text(timestampNow);
 
     // Send the timestamp with the request
-    fetch('/send_message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            text: newText,
-            userReceiving: userReceiving,
-            timestamp: timestamp  // Add the timestamp here
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error(error);
+    $.ajax({
+      url: '/send_message',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+          text: newText,
+          userReceiving: userReceiving,
+          timestamp: timestamp  // Add the timestamp here
+      }),
+      success: function(data) {
+        organizeLeftNav();
+      },
+      error: function(error) {
+          console.error(error);
+      }
     });
 
   
     $(".main-text-container").append(
-      `<div class="main-text-message my-text"><p>${newText}</p></div>`
+      `<div class="main-text-message my-text"><p>${newText}</p><p>${timestampNow}</p></div>`
     );
     alignMyText();
     var container = document.querySelector(".main-text-container");
@@ -315,6 +402,36 @@ $(document).ready(function () {
     $(".content-settings-container").css("top", "0");
   });
 
+  $(".publiclist-exit").on("click", function () {
+    $(".content-publiclist-container").css("top", "-150vh");
+  });
+
+  $(".public-usr-btn").on("click", function () {
+    $(".content-publiclist-container").css("top", "0");
+    
+    // AJAX request
+    $.ajax({
+        url: '/get_public_users',
+        type: 'GET',
+        success: function(data) {
+            console.log(data);
+
+            $(".publiclist-p-item").remove();
+
+            for (let i = 0; i < data.length; i++) {
+                let p = $('<p></p>').text(data[i]).addClass('publiclist-p-item');
+        
+                $(".content-publiclist-container").append(p);
+            }
+
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+
   function updateNoti() {
     if ($(".noti-from").length == 0) {
       $(".noti-amount").text("");
@@ -327,18 +444,47 @@ $(document).ready(function () {
     } else {
       $(".noti-container").css("height", "0px");
     }
+
+    if ($(".noti-container").children().length === 3) {
+      $(".noti-empty").css("opacity", "1");
+    } else {
+      $(".noti-empty").css("opacity", "0");
+    }
   }
 
   function getFriendsDB() {
-    $.getJSON('/get_friends', function(data) {
-        console.log(data);
-        // for each username that get's returned here run makeChatWithUser()
+    let now = new Date();
+    now.setHours(now.getHours() + 2);
+    let timestamp = now.getUTCFullYear() +
+    '-' + String(now.getUTCMonth() + 1).padStart(2, '0') +
+    '-' + String(now.getUTCDate()).padStart(2, '0') +
+    ' ' + String(now.getUTCHours()).padStart(2, '0') +
+    ':' + String(now.getUTCMinutes()).padStart(2, '0') +
+    ':' + String(now.getUTCSeconds()).padStart(2, '0');
+    
+    $.getJSON(`/get_chats?timestamp=${timestamp}`, function(data) {
+        $(".content-user-container").children().remove();
+        console.log(data)
+        console.log(data.length)
+        if (data.length === 0) {
+          $(".content-right-empty").css({
+            "opacity": "1",
+            "pointer-events": "all"
+          }); 
+          $(".add-friend").click();
+        } else {
+          $(".content-right-empty").css({
+            "opacity": "0",
+            "pointer-events": "none"
+          });
+        }
         data.forEach(makeChatWithUser);
     })
     .fail(function(jqxhr, textStatus, error) {
         var err = textStatus + ", " + error;
         console.error("Request Failed: " + err);
     });
+    
   }
 
   function makeChatWithUser(username) {
@@ -361,13 +507,20 @@ $(document).ready(function () {
                 console.error("Request Failed: " + err);
             });
         }
+
+        console.log(data.isFavourite + " DSADSAJDAJKS IS FAV")
         var lastText = data.lastText;
         var date = data.date;        
 
-        console.log("DATE " + data.date)
+        $(".content-user-container").prepend(`<div class="content-user-item ${data.isFavourite ? "favourite" : ""}"><div class="user-item-pfp"><img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" /></div><div class="user-item-active "></div><p class="user-item-username">${username}</p><p class="user-item-lasttext">${lastText}</p><p class="user-item-date">${date}</p><div class="user-item-seperator"></div></div>`);
 
-        $(".content-user-container").prepend(`<div class="content-user-item chat-item-active ${data.isFavourite ? "favourite" : ""}"><div class="user-item-pfp"><img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" /></div><div class="user-item-active "></div><p class="user-item-username">${username}</p><p class="user-item-lasttext">${lastText}</p><p class="user-item-date">${date}</p><div class="user-item-seperator"></div></div>`);
+        if ($(".content-user-container").children().length === 1) {
+          setTimeout(() => {
+            $(".content-user-item").first().click();
+          }, 200);
+        }
         reloadEventListener();
+        organizeLeftNav();
       })
       .fail(function(jqxhr, textStatus, error) {
           var err = textStatus + ", " + error;
@@ -394,10 +547,7 @@ $(document).ready(function () {
           success: function(result) {
               element.parent().remove();
               updateNoti();
-  
-              // Add the friend to the left side (you need to implement this part)
-              $(".content-user-container").prepend(`<div class="content-user-item favourite chat-item-active"><div class="user-item-pfp"><img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" /></div><div class="user-item-active "></div><p class="user-item-username">${username}</p><p class="user-item-lasttext">Have a good day</p><p class="user-item-date">12:04 Mon</p><div class="user-item-seperator"></div></div>
-              `)
+              getFriendsDB();
             reloadEventListener();
           }
       });
@@ -411,6 +561,10 @@ $(document).ready(function () {
         return;
       }
       running = true;
+
+      $(".chat-item-active").removeClass("chat-item-active");
+      $(this).addClass("chat-item-active");
+
       var username = $(this).children().eq(2).text()
       var bio = $(this).children().eq(3).text();
       var imgLink = $(this).children().eq(0).children().attr("src");
@@ -433,38 +587,35 @@ $(document).ready(function () {
 
       $(".main-text-container *").remove();
 
-
-      var currentUser2 = $(".pfp-text").text();
-      var otherUser = username;
+      var userList = username;
 
       $.ajax({
-        url: `/get_user_chats/${currentUser2},${otherUser}`,
+        url: `/get_user_chats/${userList}`,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-          // data is a list of messages
-          console.log(data);
-          // FOR EVERY MESSAGE SEND BY OTHER USER append this
-          data.forEach(message => {
-            console.log(message.username + " MESSAGE USR ID");
-            console.log(currentUser2 + " CRT USR2");
-    
-            if (message.username == currentUser2) {
-              // FOR EVERY MESSAGE SEND BY CURRENT USER append this
-              $(".main-text-container").append(`<div class="main-text-message my-text"><p>${message.text}</p></div>`);
-            } else {
-              $(".main-text-container").append(`<div class="main-text-message"><p>${message.text}</p></div>`);
-            }
-          });
-          alignMyText();
-          var container = document.querySelector(".main-text-container");
-          container.scrollTop = container.scrollHeight;
-          setTimeout(() => {
-            running = false;
-          }, 200);
+            console.log(data);
+            data.forEach(message => {
+                console.log(message.username + " MESSAGE USR ID");
+                var name = "";
+                if (userList.includes(",")) {
+                  name = " - " + message.username;
+                }
+                if (message.username == $(".pfp-text").text()) {
+                    $(".main-text-container").append(`<div class="main-text-message my-text"><p>${message.text}</p><p>${message.timestamp + name}</p></div>`);
+                } else {
+                    $(".main-text-container").append(`<div class="main-text-message"><p>${message.text}</p><p>${message.timestamp + name}</p></div>`);
+                }
+            });
+            alignMyText();
+            var container = document.querySelector(".main-text-container");
+            container.scrollTop = container.scrollHeight;
+            setTimeout(() => {
+                running = false;
+            }, 200);
         },
         error: function(error) {
-          console.error('Error:', error);
+            console.error('Error:', error);
         }
       });
     }, 200));
@@ -495,13 +646,23 @@ $(document).ready(function () {
     }
   })
 
+  $(".content-right-adduser").on("click", function() {
+    console.log("clicked");
+    if ($(".content-right-adduser-maincontainer").hasClass("content-adduser-open")) {
+      $(".content-right-adduser-maincontainer").removeClass("content-adduser-open");
+      console.log("reached");
+    } else {
+      console.log("reached2");
+      $(".content-right-adduser-maincontainer").addClass("content-adduser-open");
+    }
+  })
+
   $(".content-right-star").on("click", function () {
-    var currentUser2 = $(".pfp-text").text();
-    var otherUser = $(".content-right-username").text();
+    var userList = $(".content-right-username").text();
     console.log( "reached1");
     if ($(".content-right-star img:nth-child(2)").hasClass("user-fav-active")) {
         $.ajax({
-          url: `/unfavourite_chat/${currentUser2},${otherUser}`,
+          url: `/unfavourite_chat/${userList}`,
           type: 'POST',
           success: function(data) {
             console.log("yay")
@@ -511,27 +672,19 @@ $(document).ready(function () {
           }
         });
 
-
-
-
-      // |||| DB Request to make current Chat for current user active
       if ($(".content-user-item").eq(currentUser).hasClass("favourite")) {
         $(".content-user-item").eq(currentUser).removeClass("favourite");
       }
       $(".content-right-star img:nth-child(2)").removeClass("user-fav-active");
     } else {
-      fetch(`/favourite_chat/${currentUser2},${otherUser}`, {
+      fetch(`/favourite_chat/${userList}`, {
         method: 'POST',
     })
-       // |||| DB Request to make current Chat for current user INACTIVE, so remove it
-       console.log( "reached2");
       $(".content-right-star img:nth-child(2)").addClass("user-fav-active");
       if (!$(".content-user-item").eq(currentUser).hasClass("favourite")) {
         $(".content-user-item").eq(currentUser).addClass("favourite");
       }
     }
-
-    // remove fav tag
     filterUsers();
   });
 
@@ -562,18 +715,141 @@ $(document).ready(function () {
       $(".content-left-container").css("left", "0");
       $(".content-left-container").addClass("item-open");
     }
-  });
+  })
 
-  $(".remove-friend-button").on("click", function () {
-    var username = $(".content-right-username").text();
+  $(".public-usr-btn").on("click", () => {
+    if ($(".content-publiclist-container").hasClass("publiclist-active")) {
+      $(".content-publiclist-container").removeClass("publiclist-active")
+    } else {
+      $(".content-publiclist-container").addClass("publiclist-active")
+    }
+  })
+
+  $(".content").on("click", () => {
+    if ( $(".recheck").hasClass("recheck-open")) {
+      $(".recheck").removeClass("recheck-open")
+    }
+  })
+
+  function organizeLeftNav() {
+    let container = $(".content-user-container");
+
+    // Define the order of the days of the week
+    let daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    container.children(".content-user-item").sort(function(a, b) {
+        let dateA = $(a).find(".user-item-date").text().split(' ');
+        let dateB = $(b).find(".user-item-date").text().split(' ');
+
+        // Compare the days of the week
+        let dayComparison = daysOfWeek.indexOf(dateB[0]) - daysOfWeek.indexOf(dateA[0]);
+        if (dayComparison !== 0) {
+            return dayComparison;
+        }
+
+        // If the days of the week are the same, compare the times
+        return new Date('1970/01/01 ' + dateB[1]) - new Date('1970/01/01 ' + dateA[1]);
+    }).appendTo(container);
+}
+
+
+
+  $(".recheck-btn").on("click", () => {
+    var usernames = $(".content-right-username").text();
     $.ajax({
-        url: `/remove_friend/${username}`,
-        type: 'DELETE',
-        success: function(result) {
-            // handle success, e.g. update the UI to reflect the removed friend
+      url: `/delete_chat/${usernames}`,
+      type: 'DELETE',
+      success: function(result) {
+        if ( $(".recheck").hasClass("recheck-open")) {
+          $(".recheck").removeClass("recheck-open")
+        }
+        setTimeout(() => {
+          getFriendsDB();
+        }, 200)
+        }
+    });
+  })
+
+  $(".item-public").on("click", function () {
+    if ($(this).hasClass("item-very-active")) {
+      return;
+    }
+    $(".item-very-active").removeClass("item-very-active");
+    $(".item-public").addClass("item-very-active")
+
+    $.ajax({
+        url: '/set_user_to_public',
+        type: 'POST',
+        success: function(response) {
+            if (response.status === 'success') {
+                console.log("User privacy set to public");
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+$(".item-private").on("click", function () {
+  if ($(this).hasClass("item-very-active")) {
+    return;
+  }
+  $(".item-very-active").removeClass("item-very-active");
+  $(".item-private").addClass("item-very-active")
+
+  $.ajax({
+      url: '/set_user_to_private',
+      type: 'POST',
+      success: function(response) {
+          if (response.status === 'success') {
+              console.log("User privacy set to private");
           }
-      });
+      },
+      error: function(error) {
+          console.error('Error:', error);
+      }
+  });
+});
+
+
+
+  $(".remove-friend-btn").on("click", function () {
+    if ($(".recheck").hasClass("recheck-open")) {
+      return;
+    }
+    setTimeout(() => {
+      $(".recheck").addClass("recheck-open")
+    }, 200);
   });
 
+  // Function to check for new messages
+  function checkForNewMessages() {
+    var now = new Date();
+    now.setHours(now.getHours() + 2);
+    var timestamp = now.getUTCFullYear() +
+    '-' + String(now.getUTCMonth() + 1).padStart(2, '0') +
+    '-' + String(now.getUTCDate()).padStart(2, '0') +
+    ' ' + String(now.getUTCHours()).padStart(2, '0') +
+    ':' + String(now.getUTCMinutes()).padStart(2, '0') +
+    ':' + String(now.getUTCSeconds()).padStart(2, '0');
 
+    $.ajax({
+        url: `/check_new_messages?timestamp=${timestamp}`,
+        type: 'GET',
+        success: function(data) {
+            if (data.newMessages) {
+                console.log("new message");
+                $(".chat-item-active").click();
+            } else {
+                console.log("no new message");
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+setInterval(checkForNewMessages, 5000)
 });
