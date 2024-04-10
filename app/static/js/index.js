@@ -29,9 +29,8 @@ window.onload = function () {
         duration: 800,
         easing: "easeOutExpo"
       });
-    }, 700);
+    }, 900);
 };
-
 
 $(document).ready(function () {
   updateNoti();
@@ -39,11 +38,8 @@ $(document).ready(function () {
   getFriendsDB();
   getUserPrivacy();
 
-  console.log("1");
   if (localStorage.getItem("nav")) {
-    console.log("2");
-    $(".nav-item").removeClass("nav-item-active");
-    console.log("3");
+    $(".nav-item").removeClass("nav-item-active");;
     if  (localStorage.getItem("nav") == "active") {
       $(".nav-item").eq(0).addClass("nav-item-active");
     } else if  (localStorage.getItem("nav") == "favourite") {
@@ -425,7 +421,6 @@ $(document).ready(function () {
         url: '/get_public_users',
         type: 'GET',
         success: function(data) {
-            console.log(data);
 
             $(".publiclist-p-item").remove();
 
@@ -475,8 +470,6 @@ $(document).ready(function () {
     
     $.getJSON(`/get_chats?timestamp=${timestamp}`, function(data) {
         $(".content-user-container").children().remove();
-        console.log(data)
-        console.log(data.length)
         if (data.length === 0) {
           $(".content-right-empty").css({
             "opacity": "1",
@@ -508,10 +501,8 @@ $(document).ready(function () {
       $.getJSON(`/get_chat/${currentUser},${username}`, function(data) {
         // if not create chat
         if (!data.chatExists) {
-            console.log("NO CURRENT CHAT")
             $.post(`/create_chat/${currentUser},${username}`)
             .done(function() {
-                console.log(`Chat created with ${username}`);
             })
             .fail(function(jqxhr, textStatus, error) {
                 var err = textStatus + ", " + error;
@@ -519,7 +510,6 @@ $(document).ready(function () {
             });
         }
 
-        console.log(data.isFavourite + " DSADSAJDAJKS IS FAV")
         var lastText = data.lastText;
         var date = data.date;        
 
@@ -615,9 +605,8 @@ $(document).ready(function () {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.log(data);
             data.forEach(message => {
-                console.log(message.username + " MESSAGE USR ID");
+
                 var name = "";
                 if (userList.includes(",")) {
                   name = " - " + message.username;
@@ -669,25 +658,20 @@ $(document).ready(function () {
   })
 
   $(".content-right-adduser").on("click", function() {
-    console.log("clicked");
     if ($(".content-right-adduser-maincontainer").hasClass("content-adduser-open")) {
       $(".content-right-adduser-maincontainer").removeClass("content-adduser-open");
-      console.log("reached");
     } else {
-      console.log("reached2");
       $(".content-right-adduser-maincontainer").addClass("content-adduser-open");
     }
   })
 
   $(".content-right-star").on("click", function () {
     var userList = $(".content-right-username").text();
-    console.log( "reached1");
     if ($(".content-right-star img:nth-child(2)").hasClass("user-fav-active")) {
         $.ajax({
           url: `/unfavourite_chat/${userList}`,
           type: 'POST',
           success: function(data) {
-            console.log("yay")
           },
           error: function(error) {
             console.log(error)
@@ -806,7 +790,6 @@ $(document).ready(function () {
         type: 'POST',
         success: function(response) {
             if (response.status === 'success') {
-                console.log("User privacy set to public");
             }
         },
         error: function(error) {
@@ -827,7 +810,6 @@ $(".item-private").on("click", function () {
       type: 'POST',
       success: function(response) {
           if (response.status === 'success') {
-              console.log("User privacy set to private");
           }
       },
       error: function(error) {
@@ -849,6 +831,7 @@ $(".item-private").on("click", function () {
 
   // Function to check for new messages
   function checkForNewMessages() {
+    getFriendRequestDB();
     var now = new Date();
     now.setHours(now.getHours() + 2);
     var timestamp = now.getUTCFullYear() +
@@ -863,10 +846,8 @@ $(".item-private").on("click", function () {
         type: 'GET',
         success: function(data) {
             if (data.newMessages) {
-                console.log("new message");
                 $(".chat-item-active").click();
             } else {
-                console.log("no new message");
             }
         },
         error: function(error) {

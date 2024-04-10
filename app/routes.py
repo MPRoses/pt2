@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 
 @app.route('/', methods=['GET', 'POST'])
 def landing():
-    print("Received a request")  # Debugging statement
     if current_user.is_authenticated:
         return redirect(url_for('index'))
 
@@ -19,15 +18,10 @@ def landing():
     register_form = RegistrationForm(request.form)
 
     if request.method == 'POST':
-        print("Received a POST request")  # Debugging statement
-        print(f"Request form: {request.form}")  # New debugging statement
         if 'login_submit' in request.form:
-            print("Login form was submitted")  # Debugging statement
             if login_form.validate():
-                print("Login form data is valid")  # Debugging statement
                 user = User.query.filter_by(username=login_form.username.data).first()
                 if user is None or not user.check_password(login_form.password.data):
-                    print("Invalid username or password")  # Debugging statement
                     return jsonify(error='Invalid username or password')
                 login_user(user, remember=login_form.remember_me.data)
                 next_page = request.args.get('next')
@@ -35,15 +29,10 @@ def landing():
                     next_page = url_for('index')
                 return jsonify(redirect_url=next_page)
             else:
-                print("Form validation failed")  # Debugging statement
-                print(f"Errors: {login_form.errors}")  # New debugging statement
                 return jsonify(error='Form validation failed')
                 
         elif 'register_submit' in request.form:
-            print("Register form was submitted")  # Debugging statement
-            print(f"Register form data: {register_form.data}")  # New debugging statement
             if register_form.validate():
-                print("Register form data is valid")  # Debugging statement
                 user = User(username=register_form.username.data, email=register_form.email.data)
                 user.set_password(register_form.password.data)
                 db.session.add(user)
@@ -51,8 +40,6 @@ def landing():
                 flash('Congratulations, you are now a registered user!')
                 return jsonify(message='Registration successful')
             else:
-                print("Form validation failed")  # Debugging statement
-                print(f"Errors: {register_form.errors}")  # New debugging statement
                 return jsonify(error='Form validation failed', form_errors=register_form.errors)
 
     return render_template('landing.html', title='Connectr.', login_form=login_form, register_form=register_form)
@@ -210,9 +197,7 @@ def delete_friend_request(username):
 @login_required
 def get_user_chats(usernames):
     usernames = usernames.split(',')
-    print(f"Usernames: {usernames}") 
     users = User.query.filter(User.username.in_(usernames)).all()
-    print(f"Users: {users}")  
     users.append(current_user)
 
     # Get the chat that includes all these users
@@ -220,8 +205,6 @@ def get_user_chats(usernames):
         *(Chat.users.any(User.id == user.id) for user in users),
         ~Chat.users.any(User.id.notin_([user.id for user in users]))
     ).first()
-
-    print(f"Chat: {chat}")  # Print the chat
 
     if chat:
         # Fetch the messages for the chat
@@ -265,9 +248,6 @@ def favourite_chat(usernames):
         *(Chat.users.any(User.id == user.id) for user in users),
         ~Chat.users.any(User.id.notin_([user.id for user in users]))
     ).first()
-
-    print(f"Users: {users}")  
-    print(f"Chat: {chat}")  # Print the chat
 
     if chat:
         # Add the chat to the user's favourite chats
@@ -411,11 +391,9 @@ def chat_add_user():
         # Save the changes to the database
         db.session.commit()
 
-        print("Chat updated successfully")
         return jsonify({'message': 'Chat updated'}), 200
 
     except Exception as e:
-        print(f"An error occurred: {e}")
         return jsonify({'message': 'An error occurred'}), 500
 
 
