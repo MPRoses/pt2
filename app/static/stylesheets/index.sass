@@ -42,9 +42,12 @@ body
   left: 40px
   top: 40px
   position: absolute
-  background-color: gray
   border-radius: 100%
   overflow: hidden
+  img
+    width: 40px
+    height: 40px
+    
 .public-usr-btn 
   top: calc(100% - 80px)
   position: absolute
@@ -326,6 +329,19 @@ input
   color: red
   opacity: 0
   transition: opacity .78s ease-in-out
+
+.adduser-err-msg
+  max-width: 100% !important
+  top: 110px !important
+  text-align: center !important
+  font-size: .7em !important
+  font-family: "Poppins", sans-serif
+  color: red !important
+  opacity: 0
+  left: 5px
+  position: absolute !important
+  transition: opacity .78s ease-in-out
+
 .content-user-container
   width: 100%
   height: 74%
@@ -352,9 +368,22 @@ input
   top: 15px
   left: 40px
   position: relative
-  background-color: gray
   border-radius: 100%
   overflow: hidden
+  img
+    width: 40px
+    height: 40px
+    
+
+.user-img
+  width: 80px
+  left: 0
+  position: absolute
+  top: 7px
+
+.user-img2
+  width: 60px
+
 .user-item-active
   width: 15px
   height: 15px
@@ -403,7 +432,6 @@ input
   top: 35px
   left: 40px
   position: absolute
-  background-color: gray
   border-radius: 100%
   overflow: hidden
 .content-right-active
@@ -701,6 +729,19 @@ input
     top: 170px
     &:hover
       cursor: pointer
+
+.settings-logout
+  font-family: "Poppins", sans-serif !important
+  color: white !important
+  position: absolute !important
+  top: calc(100% - 80px) !important
+  font-size: 1em !important
+  font-weight: 300 !important
+  left: calc(100% - 43px - 40px) !important
+  opacity: 1 !important
+  &:hover
+    cursor: pointer !important
+
 .switch-img
   position: absolute
   filter: invert(1)

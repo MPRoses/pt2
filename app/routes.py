@@ -378,25 +378,32 @@ def send_message():
 @app.route('/chat_add_user', methods=['POST'])
 @login_required
 def chat_add_user():
+    try:
+        data = request.get_json()
+        new_user = User.query.filter_by(username=data['new_user']).first()
+        if not new_user:
+            return jsonify({'message': 'New user not found'}), 404
 
-    data = request.get_json()
-    print(f"Received data: {data}")
+        current_chat_users = User.query.filter(User.username.in_(data['current_chat_users'].split(','))).all()
 
-    new_user = User.query.filter_by(username=data['new_user']).first()
-    print(f"New user: {new_user}")
+        if not current_chat_users:
+            return jsonify({'message': 'Current chat users not found'}), 404
 
-    current_chat_users = User.query.filter(User.username.in_(data['current_chat_users'].split(','))).all()
-    print(f"Current chat users: {current_chat_users}")
+        # Check if new_user is already part of current_chat_users or equal to current_user
+        if new_user in current_chat_users or new_user == current_user:
+            return jsonify({'message': 'Already part of chat'}), 400
 
-    # Add current_user to the list of users
-    current_chat_users.append(current_user)
+        # Add current_user to the list of users
+        current_chat_users.append(current_user)
 
-    if new_user and current_chat_users:
         # Get the chat that includes all these users
         chat = Chat.query.filter(
             *(Chat.users.any(User.id == user.id) for user in current_chat_users),
             ~Chat.users.any(User.id.notin_([user.id for user in current_chat_users]))
         ).first()
+
+        if not chat:
+            return jsonify({'message': 'Chat not found'}), 404
 
         # Add the new user to the existing chat
         chat.users.append(new_user)
@@ -406,9 +413,12 @@ def chat_add_user():
 
         print("Chat updated successfully")
         return jsonify({'message': 'Chat updated'}), 200
-    else:
-        print("Invalid usernames")
-        return jsonify({'message': 'Invalid usernames'}), 400
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return jsonify({'message': 'An error occurred'}), 500
+
+
 
 @app.route('/check_new_messages', methods=['GET'])
 @login_required

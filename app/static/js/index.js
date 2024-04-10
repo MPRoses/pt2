@@ -29,7 +29,7 @@ window.onload = function () {
         duration: 800,
         easing: "easeOutExpo"
       });
-    }, 1300);
+    }, 700);
 };
 
 
@@ -180,20 +180,31 @@ $(document).ready(function () {
     var currentChatUsers = $(".content-right-username").text();
     // Create a new chat with these users
     $.ajax({
-        url: '/chat_add_user',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            new_user: username,
-            current_chat_users: currentChatUsers
-        }),
-        success: function(data) {
-            getFriendsDB();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-        }
-    });
+      url: '/chat_add_user',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+          new_user: username,
+          current_chat_users: currentChatUsers
+      }),
+      success: function(data) {
+          getFriendsDB();
+      },
+      error: function(error) {
+          console.error('Error:', error);
+          if (error) {
+              var errorMessage = error.responseJSON.message;
+              $(".adduser-err-msg").text(errorMessage);
+              $(".adduser-err-msg").css("opacity", "1");
+              $(".content-adduser-open").css("height", "145px");
+  
+              setTimeout(() => {
+                  $(".adduser-err-msg").css("opacity", "0");
+                  $(".content-adduser-open").css("height", "120px");
+              }, 3000);
+          }
+      }
+  });
   });
 
 
@@ -512,7 +523,15 @@ $(document).ready(function () {
         var lastText = data.lastText;
         var date = data.date;        
 
-        $(".content-user-container").prepend(`<div class="content-user-item ${data.isFavourite ? "favourite" : ""}"><div class="user-item-pfp"><img src="https://i.ibb.co/PYMDb0x/portrait-businesswoman-working-outside-park-sitting-with-laptop-work-documents-using.jpg" alt="pfp" /></div><div class="user-item-active "></div><p class="user-item-username">${username}</p><p class="user-item-lasttext">${lastText}</p><p class="user-item-date">${date}</p><div class="user-item-seperator"></div></div>`);
+        function getRandomFilter() {
+          var hue = Math.floor(Math.random() * 360);
+          var saturation = Math.floor(Math.random() * 100 + 100);
+          var brightness = Math.floor(Math.random() * 30 + 80);
+      
+          return `hue-rotate(${hue}deg) saturate(${saturation}%) brightness(${brightness}%)`;
+        }
+        
+        $(".content-user-container").prepend(`<div class="content-user-item ${data.isFavourite ? "favourite" : ""}"><div class="user-item-pfp"><img src="https://i.ibb.co/fkpCm6F/user.png" alt="pfp" style="filter: ${getRandomFilter()};"/></div><div class="user-item-active "></div><p class="user-item-username">${username}</p><p class="user-item-lasttext">${lastText}</p><p class="user-item-date">${date}</p><div class="user-item-seperator"></div></div>`);
 
         if ($(".content-user-container").children().length === 1) {
           setTimeout(() => {
@@ -568,6 +587,7 @@ $(document).ready(function () {
       var username = $(this).children().eq(2).text()
       var bio = $(this).children().eq(3).text();
       var imgLink = $(this).children().eq(0).children().attr("src");
+      var imgFilter = $(this).children().eq(0).children().css("filter");
       var userStatus = $(this).children().eq(1).css("background-color");
       var isFavourite = $(this).hasClass("favourite");
 
@@ -584,6 +604,7 @@ $(document).ready(function () {
       $(".content-right-username").text(username);
       $(".content-right-bio").text(bio);
       $(".content-right-pfp").children().attr("src", imgLink);
+      $(".content-right-pfp").children().css("filter", imgFilter);
 
       $(".main-text-container *").remove();
 
@@ -640,6 +661,7 @@ $(document).ready(function () {
     if ($(".noti-container").hasClass("noti-open")) {
       $(".noti-container").removeClass("noti-open");
       $(".noti-container").css("height", "0px");
+      $(".")
     } else {
       $(".noti-container").addClass("noti-open");
       updateNoti();
@@ -668,7 +690,7 @@ $(document).ready(function () {
             console.log("yay")
           },
           error: function(error) {
-            console.log("ney")
+            console.log(error)
           }
         });
 
@@ -725,6 +747,10 @@ $(document).ready(function () {
     }
   })
 
+  $(".settings-logout").on("click", () => {
+    window.location.href = '/logout';
+  })
+
   $(".content").on("click", () => {
     if ( $(".recheck").hasClass("recheck-open")) {
       $(".recheck").removeClass("recheck-open")
@@ -733,8 +759,6 @@ $(document).ready(function () {
 
   function organizeLeftNav() {
     let container = $(".content-user-container");
-
-    // Define the order of the days of the week
     let daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     container.children(".content-user-item").sort(function(a, b) {
